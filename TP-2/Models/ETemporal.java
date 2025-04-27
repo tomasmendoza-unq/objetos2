@@ -2,9 +2,11 @@ package Models;
 
 import java.time.LocalDate;
 import java.util.Date;
+import java.util.Set;
+
 import Enums.EstadoCivil;
 
-public class ETemporal extends Empleado {
+public class ETemporal extends EmpleadoAportador {
     private Date vencimientoContrato;
 
     private int cantHsExtras;
@@ -16,9 +18,20 @@ public class ETemporal extends Empleado {
     }
 
     @Override
+    public Double sueldoBruto() {
+        return this.sueldoBasico + adicionales();
+    }
+
+    @Override
+    public Set<Concepto> conceptos() {
+        return Set.of();
+    }
+
+    @Override
     protected Double adicionales() {
         return this.adicionalXHs(40D);
     }
+
 
     private Double adicionalXHs(double valorHora) {
         return valorHora*cantHsExtras;
@@ -33,4 +46,6 @@ public class ETemporal extends Empleado {
     public Double retencionAdicional() {
         return this.edad()>50 ? 25D : 0D;
     }
+
+
 }

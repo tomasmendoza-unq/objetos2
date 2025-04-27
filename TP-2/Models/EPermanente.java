@@ -3,8 +3,9 @@ package Models;
 import Enums.EstadoCivil;
 
 import java.time.LocalDate;
+import java.util.Set;
 
-public class EPermanente extends Empleado {
+public class EPermanente extends EmpleadoAportador{
 
     private int cantHijos;
 
@@ -17,8 +18,22 @@ public class EPermanente extends Empleado {
     }
 
     @Override
+    public Double sueldoBruto() {
+        return this.sueldoBasico + this.adicionales();
+    }
+
+    @Override
+    public Set<Concepto> conceptos() {
+        return Set.of();
+    }
+
+    @Override
     protected Double adicionales() {
         return this.adicionalXHijo() + this.estado.getBeneficioAdicional() + this.adicionalXAntiguedad();
+    }
+
+    private Double adicionalXHijo() {
+        return calculoXHijo(150D) ;
     }
 
     private Double adicionalXAntiguedad() {
@@ -35,14 +50,10 @@ public class EPermanente extends Empleado {
         return calculoXHijo(20D);
     }
 
-    private Double adicionalXHijo() {
-        return calculoXHijo(150D) ;
-    }
 
     private Double calculoXHijo(Double monto){
         return monto * cantHijos;
     }
-
 
 
 

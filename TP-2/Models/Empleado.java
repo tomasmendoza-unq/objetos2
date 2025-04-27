@@ -5,7 +5,7 @@ import Enums.EstadoCivil;
 import java.time.LocalDate;
 import java.util.Set;
 
-public abstract class Empleado {
+public abstract class Empleado implements IEmpleado{
 
    protected String nombre;
 
@@ -28,36 +28,21 @@ public abstract class Empleado {
       this.sueldoBasico = sueldoBasico;
    }
 
-   public Double sueldoBruto(){
-      return sueldoBasico + this.adicionales();
-   }
-
-   protected abstract Double adicionales();
-
-   protected Double retenciones(){
-      return this.retencionObraSocial() + this.retencionJubilacion();
-   }
-
-   public abstract Double retencionJubilacion();
-
-   protected Double retencionObraSocial() {
-      return this.calcularPorcentajeSueldoBruto(10.0) + this.retencionAdicional();
-   }
-
-   public abstract Double retencionAdicional();
-
-
    public Double sueldoNeto(){
       return this.sueldoBruto() - this.retenciones();
    }
+
+   public abstract Double sueldoBruto();
+
+
+   public abstract Double retenciones();
+
+
 
    public int edad(){
       return LocalDate.now().getYear() - fechaDeNacimiento.getYear();
    }
 
-   protected Double calcularPorcentajeSueldoBruto(Double porcentaje){
-      return (this.sueldoBruto() * porcentaje) / 100;
-   }
 
    public String getNombre() {
       return nombre;
