@@ -1,8 +1,10 @@
 package Models;
 
 import Enums.EstadoCivil;
+import Service.impls.ConceptoFactory;
 
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.Set;
 
 public class EmpleadoContratado extends Empleado{
@@ -28,7 +30,14 @@ public class EmpleadoContratado extends Empleado{
     }
 
     @Override
-    public Set<Concepto> conceptos() {
-        return Set.of();
+    public Set<Concepto> conceptos(ConceptoFactory conceptoFactory) {
+        Set<Concepto> conceptos = new HashSet<>();
+
+        conceptos.add(conceptoFactory.createConcepto("Gastos Administrativos Contractuales", this.retenciones()));
+
+
+        return conceptos;
     }
+
+
 }

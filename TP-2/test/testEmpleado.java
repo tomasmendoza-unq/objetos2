@@ -1,7 +1,7 @@
 package test;
 
 import Enums.EstadoCivil;
-import Models.EPermanente;
+import Models.EmpleadoPermanente;
 import Models.Empleado;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -14,7 +14,7 @@ public class testEmpleado {
 
     @Test
     public void test(){
-         empl = new EPermanente("Jorgito", "2321", LocalDate.of(2000, 10, 15), EstadoCivil.CASADO, 3000.00, 2, 12);
+         empl = new EmpleadoPermanente("Jorgito", "2321", LocalDate.of(2000, 10, 15), EstadoCivil.CASADO, 3000.00, 2, 12);
 
          Assertions.assertEquals(empl.getNombre(), "Jorgito");
 

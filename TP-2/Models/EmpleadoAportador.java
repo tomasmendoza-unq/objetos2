@@ -1,6 +1,7 @@
 package Models;
 
 import Enums.EstadoCivil;
+import Service.impls.ConceptoFactory;
 
 import java.time.LocalDate;
 import java.util.Set;
@@ -19,11 +20,12 @@ public abstract class EmpleadoAportador extends Empleado{
 
     @Override
     public Double retenciones() {
-        return retencionObraSocial()+retencionAdicional()+retencionJubilacion();
+        return retencionObraSocial()+retencionJubilacion();
     }
 
     public abstract Double retencionJubilacion();
     public abstract Double retencionAdicional();
     protected abstract Double adicionales();
-    public abstract Set<Concepto> conceptos();
+    public abstract Set<Concepto> conceptos(ConceptoFactory conceptoFactory);
+    ;
 }

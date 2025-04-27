@@ -1,5 +1,7 @@
 package Models;
 
+import Service.IServiceLiquidacion;
+
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
@@ -9,47 +11,39 @@ public class Empresa {
 
     private String cuit;
 
-    private Set<Empleado> empleados;
+    private Set<IEmpleado> empleados;
 
-    public Empresa(String nombre, String cuit, Set<Empleado> empleados){
+    private final IServiceLiquidacion serviceLiquidacion;
+
+
+    public Empresa(String nombre, String cuit, IServiceLiquidacion serviceLiquidacion){
         this.nombre = nombre;
         this.cuit = cuit;
-        this.empleados = empleados;
-    };
-
-    public Empresa(String nombre, String cuit){
-        this.nombre = nombre;
-        this.cuit = cuit;
+        this.serviceLiquidacion = serviceLiquidacion;
         this.empleados = new HashSet<>();
     }
 
+    public void contratarEmpleado(IEmpleado empleado){
+        empleados.add(empleado);
+    }
+
     public Double montoTotalSueldosNetos(){
-        return empleados.stream().mapToDouble(Empleado::sueldoNeto).sum();
+        return serviceLiquidacion.montoTotalSueldosNetos(empleados);
     }
 
     public Double montoTotalSueldosBrutos(){
-        return empleados.stream().mapToDouble(Empleado::sueldoBruto).sum();
+        return serviceLiquidacion.montoTotalSueldosBrutos(empleados);
     }
 
     public Double montoTotalRetenciones(){
-        return empleados.stream().mapToDouble(Empleado::retenciones).sum();
+        return serviceLiquidacion.montoTotalRetenciones(empleados);
     }
 
     public void liquidacionDeSueldos(){
-        empleados.forEach(empleado -> {
-            Concepto adicionalBruto = new Concepto("Adicional", empleado.adicionales());
-            Concepto retencionJubilacion = new Concepto("Retencion Jubilacion", empleado.retencionJubilacion());
-            Concepto retencionObraSocial = new Concepto("Retencion obra social", empleado.retencionObraSocial());
-            Concepto retencionAdicional = new Concepto("Retencion adicional", empleado.retencionAdicional());
+        serviceLiquidacion.liquidarSueldos(empleados);
+    }
 
-            Set<Concepto> conceptos = new HashSet<>();
-
-            conceptos.add(adicionalBruto);
-            conceptos.add(retencionJubilacion);
-            conceptos.add(retencionObraSocial);
-            conceptos.add(retencionAdicional);
-
-            ReciboHaberes reciboHaberes = new ReciboHaberes(empleado.getNombre(), empleado.getDireccion(), conceptos, LocalDate.now() ,  empleado.sueldoNeto(), empleado.sueldoBruto());
-        });
+    public Set<IEmpleado> getEmpleados() {
+        return empleados;
     }
 }

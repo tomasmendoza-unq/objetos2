@@ -1,17 +1,19 @@
 package Models;
 
 import Enums.EstadoCivil;
+import Service.impls.ConceptoFactory;
 
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.Set;
 
-public class EPermanente extends EmpleadoAportador{
+public class EmpleadoPermanente extends EmpleadoAportador{
 
     private int cantHijos;
 
     private int antiguedad;
 
-    public EPermanente(String nombre, String direccion, LocalDate fechaDeNacimiento, EstadoCivil estado, Double sueldoBasico, int cantHijos, int antiguedad) {
+    public EmpleadoPermanente(String nombre, String direccion, LocalDate fechaDeNacimiento, EstadoCivil estado, Double sueldoBasico, int cantHijos, int antiguedad) {
         super(nombre, direccion, fechaDeNacimiento, estado, sueldoBasico);
         this.cantHijos = cantHijos;
         this.antiguedad = antiguedad;
@@ -22,14 +24,23 @@ public class EPermanente extends EmpleadoAportador{
         return this.sueldoBasico + this.adicionales();
     }
 
-    @Override
-    public Set<Concepto> conceptos() {
-        return Set.of();
-    }
 
     @Override
     protected Double adicionales() {
         return this.adicionalXHijo() + this.estado.getBeneficioAdicional() + this.adicionalXAntiguedad();
+    }
+
+    @Override
+    public Set<Concepto> conceptos(ConceptoFactory conceptoFactory) {
+        Set<Concepto> conceptos = new HashSet<>();
+
+        conceptos.add(conceptoFactory.createConcepto("Retencion jubilatoria", -this.retencionJubilacion()));
+        conceptos.add(conceptoFactory.createConcepto("Retencion obra social", -this.retencionObraSocial()));
+        conceptos.add(conceptoFactory.createConcepto("AdicionalXHijo", this.adicionalXHijo()));
+        conceptos.add(conceptoFactory.createConcepto("Beneficio por estado", this.estado.getBeneficioAdicional()));
+        conceptos.add(conceptoFactory.createConcepto("Antiguedad", this.adicionalXAntiguedad()));
+
+        return conceptos;
     }
 
     private Double adicionalXHijo() {

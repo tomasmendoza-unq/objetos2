@@ -3,6 +3,7 @@ package Models;
 import Enums.EstadoCivil;
 
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.Set;
 
 public abstract class Empleado implements IEmpleado{
@@ -15,7 +16,7 @@ public abstract class Empleado implements IEmpleado{
 
    protected EstadoCivil estado;
 
-   protected Set<ReciboHaberes> recibos;
+   protected Set<ReciboHaber> recibos;
 
    protected Double sueldoBasico;
 
@@ -26,6 +27,7 @@ public abstract class Empleado implements IEmpleado{
       this.fechaDeNacimiento = fechaDeNacimiento;
       this.estado = estado;
       this.sueldoBasico = sueldoBasico;
+      this.recibos = new HashSet<>();
    }
 
    public Double sueldoNeto(){
@@ -37,12 +39,18 @@ public abstract class Empleado implements IEmpleado{
 
    public abstract Double retenciones();
 
-
+   public void addHaber(ReciboHaber haber){
+      recibos.add(haber);
+   };
 
    public int edad(){
       return LocalDate.now().getYear() - fechaDeNacimiento.getYear();
    }
 
+   @Override
+   public Set<ReciboHaber> getRecibos() {
+      return recibos;
+   }
 
    public String getNombre() {
       return nombre;

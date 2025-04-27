@@ -2,16 +2,18 @@ package Models;
 
 import java.time.LocalDate;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 
 import Enums.EstadoCivil;
+import Service.impls.ConceptoFactory;
 
-public class ETemporal extends EmpleadoAportador {
+public class EmpleadoTemporal extends EmpleadoAportador {
     private Date vencimientoContrato;
 
     private int cantHsExtras;
 
-    public ETemporal(String nombre, String direccion, LocalDate fechaDeNacimiento, EstadoCivil estado, Double sueldoBasico, int cantHsExtras, Date vencimientoContrato) {
+    public EmpleadoTemporal(String nombre, String direccion, LocalDate fechaDeNacimiento, EstadoCivil estado, Double sueldoBasico, int cantHsExtras, Date vencimientoContrato) {
         super(nombre, direccion, fechaDeNacimiento, estado, sueldoBasico);
         this.cantHsExtras = cantHsExtras;
         this.vencimientoContrato = vencimientoContrato;
@@ -22,14 +24,22 @@ public class ETemporal extends EmpleadoAportador {
         return this.sueldoBasico + adicionales();
     }
 
-    @Override
-    public Set<Concepto> conceptos() {
-        return Set.of();
-    }
 
     @Override
     protected Double adicionales() {
         return this.adicionalXHs(40D);
+    }
+
+    @Override
+    public Set<Concepto> conceptos(ConceptoFactory conceptoFactory) {
+        Set<Concepto> conceptos = new HashSet<>();
+
+        conceptos.add(conceptoFactory.createConcepto("Retencion jubilatoria", -this.retencionJubilacion()));
+        conceptos.add(conceptoFactory.createConcepto("Retencion adicional", -this.retencionAdicional()));
+        conceptos.add(conceptoFactory.createConcepto("Retencion obra social", -this.retencionObraSocial()));
+        conceptos.add(conceptoFactory.createConcepto("AdicionalXHs", this.adicionales()));
+
+        return conceptos;
     }
 
 
