@@ -10,4 +10,12 @@ public class Concepto {
         this.descripcion = descripcion;
         this.monto = monto;
     }
+
+    public String getDescripcion() {
+        return descripcion;
+    }
+
+    public Double getMonto() {
+        return monto;
+    }
 }

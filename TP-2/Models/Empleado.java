@@ -3,9 +3,10 @@ package Models;
 import Enums.EstadoCivil;
 
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.Set;
 
-public abstract class Empleado {
+public abstract class Empleado implements IEmpleado{
 
    protected String nombre;
 
@@ -15,7 +16,7 @@ public abstract class Empleado {
 
    protected EstadoCivil estado;
 
-   protected Set<ReciboHaberes> recibos;
+   protected Set<ReciboHaber> recibos;
 
    protected Double sueldoBasico;
 
@@ -26,37 +27,29 @@ public abstract class Empleado {
       this.fechaDeNacimiento = fechaDeNacimiento;
       this.estado = estado;
       this.sueldoBasico = sueldoBasico;
+      this.recibos = new HashSet<>();
    }
-
-   public Double sueldoBruto(){
-      return sueldoBasico + this.adicionales();
-   }
-
-   protected abstract Double adicionales();
-
-   protected Double retenciones(){
-      return this.retencionObraSocial() + this.retencionJubilacion();
-   }
-
-   public abstract Double retencionJubilacion();
-
-   protected Double retencionObraSocial() {
-      return this.calcularPorcentajeSueldoBruto(10.0) + this.retencionAdicional();
-   }
-
-   public abstract Double retencionAdicional();
-
 
    public Double sueldoNeto(){
       return this.sueldoBruto() - this.retenciones();
    }
 
+   public abstract Double sueldoBruto();
+
+
+   public abstract Double retenciones();
+
+   public void addHaber(ReciboHaber haber){
+      recibos.add(haber);
+   };
+
    public int edad(){
       return LocalDate.now().getYear() - fechaDeNacimiento.getYear();
    }
 
-   protected Double calcularPorcentajeSueldoBruto(Double porcentaje){
-      return (this.sueldoBruto() * porcentaje) / 100;
+   @Override
+   public Set<ReciboHaber> getRecibos() {
+      return recibos;
    }
 
    public String getNombre() {
